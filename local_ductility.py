@@ -86,24 +86,17 @@ class Ductility:
         self.Asw1_diameter = Entry(tk)
         self.Asw1_diameter.grid(column=1, row=11, padx=5, pady=5)
 
-        # Label(tk, text='Lenght of Stirrup [cm]: ', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=12, padx=5, pady=5)
-        # lenght_stirrup = choose_stirrup()
-        # Label(tk, text={lenght_stirrup}).grid(column=1, row=12, padx=5, pady=5)
-        # # lenght_stirrup.grid(column=1, row=12, padx=5, pady=5)
-
-        Label(tk, text='Asv,1 [mm] ', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=13, padx=5, pady=5)
+        Label(tk, text='Asv,1 [mm] ', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=12, padx=5, pady=5)
         self.Asv1 = Entry(tk)
-        self.Asv1.grid(column=1, row=13, padx=5, pady=5)
+        self.Asv1.grid(column=1, row=12, padx=5, pady=5)
 
         self.Sv = IntVar()
         radio_button10 = Radiobutton(tk, text='/10', value=10, variable=self.Sv, bg=MAIN_COLOUR)
-        radio_button10.grid(column=2, row=13, padx=5, pady=5)
+        radio_button10.grid(column=2, row=12, padx=5, pady=5)
         radio_button11 = Radiobutton(tk, text='/15', value=15, variable=self.Sv, bg=MAIN_COLOUR)
-        radio_button11.grid(column=3, row=13, padx=5, pady=5)
+        radio_button11.grid(column=3, row=12, padx=5, pady=5)
         radio_button12 = Radiobutton(tk, text='/20', value=20, variable=self.Sv, bg=MAIN_COLOUR)
-        radio_button12.grid(column=4, row=13, padx=5, pady=5)
-
-        # lenght_stirrup = choose_stirrup()
+        radio_button12.grid(column=4, row=12, padx=5, pady=5)
 
         Button(tk, text='Calculate Lc [cm]', bg='green', fg='white', font=MAIN_FONT,
                command=lambda: calculate_required_lc(float(self.Hs.get()), float(self.lc_cm.get()),
@@ -115,11 +108,11 @@ class Ductility:
                                                      int(self.Asw1_diameter.get()), int(self.As1_diameter.get()),
                                                      int(self.Asv1.get()),
                                                      int(self.Sv.get()), self.is_bigger_T1.get())).grid(column=0,
-                                                                                                        row=15, padx=5,
+                                                                                                        row=14, padx=5,
                                                                                                         pady=5)
 
-        Button(tk, text="Stirrup distibution", command=choose_stirrup).grid(column=0, row=14, padx=5,
-                                                                            pady=5)
+        Button(tk, text="Stirrup distribution", command=choose_stirrup).grid(column=0, row=13, padx=5,
+                                                                             pady=5)
 
 
 def get_value_lenght_stirrup():
@@ -146,7 +139,7 @@ def choose_stirrup():
                                                                                                          row=0)
     Radiobutton(tk, text='700', value=700, variable=button_value, command=get_value_lenght_stirrup).grid(column=3,
                                                                                                          row=0)
-    Button(tk, text="Go Back", command=lambda : Ductility.__init__(self=main_view)).grid(column=0, row=1, padx=5, pady=5)
+    Button(tk, text="Go Back", command=lambda: Ductility.__init__(self=main_view)).grid(column=0, row=1, padx=5, pady=5)
 
 
 def calculate_required_lc(Hs_cm, lc_cm, bw_cm, lw_cm, global_ductility, q0, Ned, fck, concrete_cover,
@@ -188,13 +181,13 @@ def calculate_required_lc(Hs_cm, lc_cm, bw_cm, lw_cm, global_ductility, q0, Ned,
 
     Vsw = Asw1 * lenght_stirrup
     Vc = b0 * h0 * Sw
-
+    Label(tk, text=f'{lenght_stirrup}').grid (column=1, row=13, padx=5, pady=5)
     Wwd = (Vsw / Vc) * (Fywd / fcd)
     if Wwd >= 0.08:
-        Label(tk, text=f"{Wwd:.2f} >= 0.08 --> OK", bg='#93c47d', fg='black').grid(column=2, row=12, padx=5,
+        Label(tk, text=f"{Wwd:.2f} >= 0.08 --> OK", bg='#93c47d', fg='black').grid(column=2, row=13, padx=5,
                                                                                    pady=5)
     else:
-        Label(tk, text=f"{Wwd:.2f}  < 0.08 --> NO", bg='#CC3333', fg='white').grid(column=2, row=12, padx=5, pady=5)
+        Label(tk, text=f"{Wwd:.2f}  < 0.08 --> NO", bg='#CC3333', fg='white').grid(column=2, row=13, padx=5, pady=5)
 
     sum_square_bi = calculate_sum_of_squares_bi(lc_cm, bw_cm, lw_cm, bw_cm, concrete_cover, Asw1_diameter, As1_diameter)
     alfa_n = (1 - sum_square_bi / (6 * b0 * h0))
