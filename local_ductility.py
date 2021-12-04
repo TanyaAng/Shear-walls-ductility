@@ -3,17 +3,17 @@ from math import ceil
 from PIL import ImageTk, Image
 import json
 
+MAIN_COLOUR = '#fce5cd'
+MAIN_FONT = 'ArialNarrow 10 bold'
+
 
 def clear_view():
     for slave in tk.grid_slaves():
         slave.destroy()
 
 
-MAIN_COLOUR = '#fce5cd'
-MAIN_FONT = 'ArialNarrow 10 bold'
-
-
 def render_main_view():
+    global head_40_45_img
     global head_40_60_img
     global head_40_75_img
     global head_40_90_img
@@ -21,88 +21,9 @@ def render_main_view():
     global head_40_120_img
     global head_40_135_img
     global head_40_150_img
-
-    clear_view()
-    Label(tk, text='Storey Height', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=0, padx=5, pady=5)
-    Hs = Entry(tk)
-    Hs.grid(column=1, row=0, padx=5, pady=5)
-
-    Label(tk, text='Initial Lenght of Lc [cm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=1, padx=5, pady=5)
-    lc_cm = Entry(tk)
-    lc_cm.grid(column=1, row=1, padx=5, pady=5)
-
-    Label(tk, text='Wall Width [cm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=2, padx=5, pady=5)
-    bw_cm = Entry(tk)
-    bw_cm.grid(column=1, row=2, padx=5, pady=5)
-
-    Label(tk, text='Wall Lenght [cm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=3, padx=5, pady=5)
-    lw_cm = Entry(tk)
-    lw_cm.grid(column=1, row=3, padx=5, pady=5)
-
-    Label(tk, text='Ductility Class', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=4, padx=5, pady=5)
-    global_ductility = StringVar()
-    radio_button1 = Radiobutton(tk, text='DCM', value='DCM', variable=global_ductility, bg='#fce5cd')
-    radio_button1.grid(column=1, row=4, padx=5, pady=5)
-    radio_button2 = Radiobutton(tk, text='DCH', value='DCH', variable=global_ductility, bg='#fce5cd')
-    radio_button2.grid(column=2, row=4, padx=5, pady=5)
-
-    Label(tk, text="Comparison Between T1 and Tc", bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=5, padx=5,
-                                                                                        pady=5)
-    is_bigger_T1 = BooleanVar()
-    radio_button33 = Radiobutton(tk, text='T1>=Tc', value=True, variable=is_bigger_T1, bg='#fce5cd')
-    radio_button33.grid(column=1, row=5, padx=5, pady=5)
-    radio_button44 = Radiobutton(tk, text='T1<Tc', value=False, variable=is_bigger_T1, bg='#fce5cd')
-    radio_button44.grid(column=2, row=5, padx=5, pady=5)
-
-    Label(tk, text='Behavior Factor q0', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=6, padx=5, pady=5)
-    q0 = Entry(tk)
-    q0.grid(column=1, row=6, padx=5, pady=5)
-
-    Label(tk, text='Concrete Class', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=7, padx=5, pady=5)
-    fck = IntVar()
-    radio_button3 = Radiobutton(tk, text='C25/30', value=25, variable=fck, bg='#fce5cd')
-    radio_button3.grid(column=1, row=7, padx=5, pady=5)
-    radio_button4 = Radiobutton(tk, text='C30/37', value=30, variable=fck, bg='#fce5cd')
-    radio_button4.grid(column=2, row=7, padx=5, pady=5)
-    radio_button5 = Radiobutton(tk, text='C35/45', value=35, variable=fck, bg='#fce5cd')
-    radio_button5.grid(column=3, row=7, padx=5, pady=5)
-
-    Label(tk, text='Concrete Cover [cm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=8, padx=5, pady=5)
-    concrete_cover = DoubleVar()
-    radio_button6 = Radiobutton(tk, text='2.5 cm', value=2.5, variable=concrete_cover, bg='#fce5cd')
-    radio_button6.grid(column=1, row=8, padx=5, pady=5)
-    radio_button7 = Radiobutton(tk, text='3.0 cm', value=3.0, variable=concrete_cover, bg='#fce5cd')
-    radio_button7.grid(column=2, row=8, padx=5, pady=5)
-    radio_button8 = Radiobutton(tk, text='3.5 cm', value=3.5, variable=concrete_cover, bg='#fce5cd')
-    radio_button8.grid(column=3, row=8, padx=5, pady=5)
-    radio_button9 = Radiobutton(tk, text='4.0 cm', value=4.0, variable=concrete_cover, bg='#fce5cd')
-    radio_button9.grid(column=4, row=8, padx=5, pady=5)
-
-    Label(tk, text='Ned [kN]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=9, padx=5, pady=5)
-    Ned = Entry(tk)
-    Ned.grid(column=1, row=9, padx=5, pady=5)
-
-    Label(tk, text='As1 [mm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=10, padx=5, pady=5)
-    As1_diameter = Entry(tk)
-    As1_diameter.grid(column=1, row=10, padx=5, pady=5)
-
-    Label(tk, text='Asw1 [mm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=11, padx=5, pady=5)
-    Asw1_diameter = Entry(tk)
-    Asw1_diameter.grid(column=1, row=11, padx=5, pady=5)
-
-    Label(tk, text='Asv,1 [mm] ', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=12, padx=5, pady=5)
-    Asv1 = Entry(tk)
-    Asv1.grid(column=1, row=12, padx=5, pady=5)
-
-    Sv = IntVar()
-    radio_button10 = Radiobutton(tk, text='/10', value=10, variable=Sv, bg=MAIN_COLOUR)
-    radio_button10.grid(column=2, row=12, padx=5, pady=5)
-    radio_button11 = Radiobutton(tk, text='/15', value=15, variable=Sv, bg=MAIN_COLOUR)
-    radio_button11.grid(column=3, row=12, padx=5, pady=5)
-    radio_button12 = Radiobutton(tk, text='/20', value=20, variable=Sv, bg=MAIN_COLOUR)
-    radio_button12.grid(column=4, row=12, padx=5, pady=5)
-
-    button_value = IntVar()
+    head_40_45_img = Image.open('D:\SOFTUNI\Local Ductility Of Shear Walls\head40x45.png')
+    head_40_45_img = head_40_45_img.resize((90, 60))
+    head_40_45_img = ImageTk.PhotoImage(head_40_45_img)
     head_40_60_img = Image.open('D:\SOFTUNI\Local Ductility Of Shear Walls\head40x60.png')
     head_40_60_img = head_40_60_img.resize((90, 60))
     head_40_60_img = ImageTk.PhotoImage(head_40_60_img)
@@ -124,36 +45,126 @@ def render_main_view():
     head_40_150_img = Image.open('D:\SOFTUNI\Local Ductility Of Shear Walls\head40x150.png')
     head_40_150_img = head_40_150_img.resize((90, 60))
     head_40_150_img = ImageTk.PhotoImage(head_40_150_img)
-    Radiobutton(tk, image=head_40_60_img, value=445, variable=button_value, bg=MAIN_COLOUR).grid(column=1, row=13)
-    Radiobutton(tk, image=head_40_75_img, value=440, variable=button_value, bg=MAIN_COLOUR).grid(column=2, row=13)
-    Radiobutton(tk, image=head_40_90_img, value=699, variable=button_value, bg=MAIN_COLOUR).grid(column=3, row=13)
-    Radiobutton(tk, image=head_40_105_img, value=858, variable=button_value, bg=MAIN_COLOUR).grid(column=4, row=13)
-    Radiobutton(tk, image=head_40_120_img, value=923, variable=button_value, bg=MAIN_COLOUR).grid(column=1, row=14)
-    Radiobutton(tk, image=head_40_135_img, value=1202, variable=button_value, bg=MAIN_COLOUR).grid(column=2, row=14)
-    Radiobutton(tk, image=head_40_150_img, value=1267, variable=button_value, bg=MAIN_COLOUR).grid(column=3, row=14)
 
+    clear_view()
+
+    Label(tk, text='Shear wall name', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=0, padx=5, pady=5)
+    shear_wall = Entry(tk)
+    shear_wall.grid(column=1, row=0, padx=5, pady=5)
+
+    Label(tk, text='Storey Height', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=2, row=0, padx=5, pady=5)
+    Hs = Entry(tk)
+    Hs.grid(column=3, row=0, padx=5, pady=5)
+
+    Label(tk, text='Initial Lenght of Lc [cm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=1, padx=5, pady=5)
+    Lc_cm = IntVar()
+    Radiobutton(tk, image=head_40_45_img, value=45, variable=Lc_cm, bg=MAIN_COLOUR).grid(column=1, row=1)
+    Radiobutton(tk, image=head_40_60_img, value=60, variable=Lc_cm, bg=MAIN_COLOUR).grid(column=2, row=1)
+    Radiobutton(tk, image=head_40_75_img, value=75, variable=Lc_cm, bg=MAIN_COLOUR).grid(column=3, row=1)
+    Radiobutton(tk, image=head_40_90_img, value=90, variable=Lc_cm, bg=MAIN_COLOUR).grid(column=4, row=1)
+    Radiobutton(tk, image=head_40_105_img, value=105, variable=Lc_cm, bg=MAIN_COLOUR).grid(column=1, row=2)
+    Radiobutton(tk, image=head_40_120_img, value=120, variable=Lc_cm, bg=MAIN_COLOUR).grid(column=2, row=2)
+    Radiobutton(tk, image=head_40_135_img, value=135, variable=Lc_cm, bg=MAIN_COLOUR).grid(column=3, row=2)
+    Radiobutton(tk, image=head_40_150_img, value=150, variable=Lc_cm, bg=MAIN_COLOUR).grid(column=4, row=2)
+
+    Label(tk, text='Wall Width [cm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=3, padx=5, pady=5)
+    bw_cm = Entry(tk)
+    bw_cm.grid(column=1, row=3, padx=5, pady=5)
+
+    Label(tk, text='Wall Length [cm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=4, padx=5, pady=5)
+    lw_cm = Entry(tk)
+    lw_cm.grid(column=1, row=4, padx=5, pady=5)
+
+    Label(tk, text='Ductility Class', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=5, padx=5, pady=5)
+    global_ductility = StringVar()
+    radio_button1 = Radiobutton(tk, text='DCM', value='DCM', variable=global_ductility, bg='#fce5cd')
+    radio_button1.grid(column=1, row=5, padx=5, pady=5)
+    radio_button2 = Radiobutton(tk, text='DCH', value='DCH', variable=global_ductility, bg='#fce5cd')
+    radio_button2.grid(column=2, row=5, padx=5, pady=5)
+
+    Label(tk, text="T1(s)", bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=6, padx=5, pady=5)
+    T1 = Entry(tk)
+    T1.grid(column=1, row=6, padx=5, pady=5)
+    soil_type = DoubleVar()
+    radio_button33 = Radiobutton(tk, text='Soil A', value=0.3, variable=soil_type, bg='#fce5cd')
+    radio_button33.grid(column=1, row=7, padx=5, pady=5)
+    radio_button44 = Radiobutton(tk, text='Soil B', value=0.4, variable=soil_type, bg='#fce5cd')
+    radio_button44.grid(column=2, row=7, padx=5, pady=5)
+    radio_button55 = Radiobutton(tk, text='Soil C', value=0.5, variable=soil_type, bg='#fce5cd')
+    radio_button55.grid(column=3, row=7, padx=5, pady=5)
+    radio_button66 = Radiobutton(tk, text='Soil D', value=0.6, variable=soil_type, bg='#fce5cd')
+    radio_button66.grid(column=4, row=7, padx=5, pady=5)
+
+    Label(tk, text='Behavior Factor q0', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=8, padx=5, pady=5)
+    q0 = Entry(tk)
+    q0.grid(column=1, row=8, padx=5, pady=5)
+
+    Label(tk, text='Concrete Class', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=9, padx=5, pady=5)
+    fck = IntVar()
+    radio_button3 = Radiobutton(tk, text='C25/30', value=25, variable=fck, bg='#fce5cd')
+    radio_button3.grid(column=1, row=9, padx=5, pady=5)
+    radio_button4 = Radiobutton(tk, text='C30/37', value=30, variable=fck, bg='#fce5cd')
+    radio_button4.grid(column=2, row=9, padx=5, pady=5)
+    radio_button5 = Radiobutton(tk, text='C35/45', value=35, variable=fck, bg='#fce5cd')
+    radio_button5.grid(column=3, row=9, padx=5, pady=5)
+
+    Label(tk, text='Concrete Cover [cm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=10, padx=5, pady=5)
+    concrete_cover = DoubleVar()
+    radio_button6 = Radiobutton(tk, text='2.5 cm', value=2.5, variable=concrete_cover, bg='#fce5cd')
+    radio_button6.grid(column=1, row=10, padx=5, pady=5)
+    radio_button7 = Radiobutton(tk, text='3.0 cm', value=3.0, variable=concrete_cover, bg='#fce5cd')
+    radio_button7.grid(column=2, row=10, padx=5, pady=5)
+    radio_button8 = Radiobutton(tk, text='3.5 cm', value=3.5, variable=concrete_cover, bg='#fce5cd')
+    radio_button8.grid(column=3, row=10, padx=5, pady=5)
+    radio_button9 = Radiobutton(tk, text='4.0 cm', value=4.0, variable=concrete_cover, bg='#fce5cd')
+    radio_button9.grid(column=4, row=10, padx=5, pady=5)
+
+    Label(tk, text='Ned [kN]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=11, padx=5, pady=5)
+    Ned = Entry(tk)
+    Ned.grid(column=1, row=11, padx=5, pady=5)
+
+    Label(tk, text='As1 [mm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=12, padx=5, pady=5)
+    As1_diameter = Entry(tk)
+    As1_diameter.grid(column=1, row=12, padx=5, pady=5)
+
+    Label(tk, text='Asw1 [mm]', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=13, padx=5, pady=5)
+    Asw1_diameter = Entry(tk)
+    Asw1_diameter.grid(column=1, row=13, padx=5, pady=5)
+
+    Label(tk, text='Asv,1 [mm] ', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=14, padx=5, pady=5)
+    Asv1 = Entry(tk)
+    Asv1.grid(column=1, row=14, padx=5, pady=5)
+
+    Sv = IntVar()
+    radio_button10 = Radiobutton(tk, text='/10', value=10, variable=Sv, bg=MAIN_COLOUR)
+    radio_button10.grid(column=2, row=14, padx=5, pady=5)
+    radio_button11 = Radiobutton(tk, text='/15', value=15, variable=Sv, bg=MAIN_COLOUR)
+    radio_button11.grid(column=3, row=14, padx=5, pady=5)
+    radio_button12 = Radiobutton(tk, text='/20', value=20, variable=Sv, bg=MAIN_COLOUR)
+    radio_button12.grid(column=4, row=14, padx=5, pady=5)
     Button(tk, text='Calculate Lc [cm]', bg='green', fg='white', font=MAIN_FONT,
-           command=lambda: calculate_required_lc(float(Hs.get()), float(lc_cm.get()),
+           command=lambda: calculate_required_lc(shear_wall.get(), float(Hs.get()), int(Lc_cm.get()),
                                                  float(bw_cm.get()),
                                                  float(lw_cm.get()), global_ductility.get(),
-                                                 int(q0.get()),
-                                                 float(Ned.get()), float(fck.get()),
+                                                 float(q0.get()), float(Ned.get()), float(fck.get()),
                                                  float(concrete_cover.get()),
-                                                 int(Asw1_diameter.get()), int(As1_diameter.get()),
-                                                 int(Asv1.get()),
-                                                 int(Sv.get()), is_bigger_T1.get(),
-                                                 int(button_value.get()))).grid(column=0, row=15, padx=5, pady=5)
+                                                 int(Asw1_diameter.get()), int(As1_diameter.get()), int(Asv1.get()),
+                                                 int(Sv.get()), float(T1.get()), float(soil_type.get()))).grid(column=0,
+                                                                                                               row=15,
+                                                                                                               padx=5,
+                                                                                                               pady=5)
+    Button(tk, text='Create Note', bg='green', fg='white', font=MAIN_FONT).grid(column=0, row=20, padx=5,pady=5)
 
 
-def calculate_required_lc(Hs_cm, lc_cm, bw_cm, lw_cm, global_ductility, q0, Ned, fck, concrete_cover,
-                          Asw1_diameter, As1_diameter, Asv1_diameter, Sv, is_bigger_T1, lenght_stirrup):
-    # try:
-    #     with open('database.txt', 'r') as file:
-    #         database = json.load(file)
-    #         lenght_stirrup = database[0]
-    # except:
-    #     Label(tk, text="Choose stirrup distribution").grid(column=1, row=14, padx=5, pady=5)
+def create_note(shear_wall, lc_cm, bw_cm, Ned, lc_req, Med_to_Mrd):
+    with open('database.txt', 'a') as file:
+        shear_walls = {"Shear wall No:": shear_wall, "Lc": lc_cm, "bw": bw_cm, 'Ned': Ned, "Required Lc": lc_req,
+                           "Med/Mrd": Med_to_Mrd}
+        json.dump(shear_walls, file)
 
+
+def calculate_required_lc(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, global_ductility, q0, Ned, fck, concrete_cover,
+                          Asw1_diameter, As1_diameter, Asv1_diameter, Sv, T1, Tc):
     REBARS = {8: 0.503, 10: 0.785, 12: 1.131, 14: 1.539, 16: 2.011, 18: 2.545, 20: 3.142, 22: 3.801, 25: 4.909,
               28: 6.158, 32: 8.042}
     FYK = 500
@@ -166,25 +177,25 @@ def calculate_required_lc(Hs_cm, lc_cm, bw_cm, lw_cm, global_ductility, q0, Ned,
     h0 = lc_cm - 2 * concrete_cover
     Sw = 10
     if lc_cm < max(0.15 * lw_cm, 1.50 * bw_cm):
-        Label(tk, text=f"Lc > Lc,min -> NO", bg='#CC3333', fg='white').grid(column=2, row=1, padx=5,
+        Label(tk, text=f"Lc > Lc,min -> NO", bg='#CC3333', fg='white').grid(column=2, row=4, padx=5,
                                                                             pady=5)
     else:
-        Label(tk, text="Lc > Lc,min -> OK", bg='#93c47d', fg='black').grid(column=2, row=1, padx=5, pady=5)
+        Label(tk, text="Lc > Lc,min -> OK", bg='#93c47d', fg='black').grid(column=2, row=4, padx=5, pady=5)
 
     if lc_cm <= max(0.2 * lw_cm, 2 * bw_cm):
         if bw_cm >= max(Hs_cm / 15, 20):
-            Label(tk, text="Bw > Bw.min -> OK", bg='#93c47d', fg='black').grid(column=2, row=2, padx=5, pady=5)
+            Label(tk, text="Bw > Bw.min -> OK", bg='#93c47d', fg='black').grid(column=2, row=3, padx=5, pady=5)
         else:
-            Label(tk, text=f"Bw > Bw.min -> NO", bg='#CC3333', fg='white').grid(column=2, row=2, padx=5, pady=5)
+            Label(tk, text=f"Bw > Bw.min -> NO", bg='#CC3333', fg='white').grid(column=2, row=3, padx=5, pady=5)
     else:
         if bw_cm >= max(Hs_cm / 10, 20):
-            Label(tk, text="Bw > Bw.min -> OK", bg='#93c47d', fg='black').grid(column=2, row=2, padx=5, pady=5)
+            Label(tk, text="Bw > Bw.min -> OK", bg='#93c47d', fg='black').grid(column=2, row=3, padx=5, pady=5)
         else:
-            Label(tk, text=f"Bw > Bw.min -> NO", bg='#CC3333', fg='white').grid(column=2, row=2, padx=5, pady=5)
-
-    Vsw = Asw1 * lenght_stirrup
+            Label(tk, text=f"Bw > Bw.min -> NO", bg='#CC3333', fg='white').grid(column=2, row=3, padx=5, pady=5)
+    length_stirrup = calculate_length_of_stirrups(lc_cm, bw_cm, concrete_cover)
+    Vsw = Asw1 * length_stirrup
     Vc = b0 * h0 * Sw
-    Label(tk, text=f'Stirrups = {lenght_stirrup} cm', bg=MAIN_COLOUR).grid(column=1, row=15, padx=5, pady=5)
+    Label(tk, text=f'Stirrups = {length_stirrup} cm', bg=MAIN_COLOUR).grid(column=1, row=15, padx=5, pady=5)
     Wwd = (Vsw / Vc) * (Fywd / fcd)
     if Wwd >= 0.08:
         Label(tk, text=f"{Wwd:.2f} >= 0.08 --> OK", bg='#93c47d', fg='black').grid(column=2, row=15, padx=5,
@@ -201,9 +212,9 @@ def calculate_required_lc(Hs_cm, lc_cm, bw_cm, lw_cm, global_ductility, q0, Ned,
 
     vd = Ned / (lw_cm * bw_cm * fcd)
     if vd > 0.4:
-        Label(tk, text=f"ned > 0.4 -> NO", bg='#CC3333', fg='white').grid(column=2, row=9, padx=5, pady=5)
+        Label(tk, text=f"ned > 0.4 -> NO", bg='#CC3333', fg='white').grid(column=2, row=11, padx=5, pady=5)
     else:
-        Label(tk, text=f"ned > 0.4 -> OK", bg='#93c47d', fg='black').grid(column=2, row=9, padx=5, pady=5)
+        Label(tk, text=f"ned > 0.4 -> OK", bg='#93c47d', fg='black').grid(column=2, row=11, padx=5, pady=5)
 
     pv = (2 * Asv1) / (Sv * bw_cm)
     Wv = pv * Fywd / fcd
@@ -219,12 +230,14 @@ def calculate_required_lc(Hs_cm, lc_cm, bw_cm, lw_cm, global_ductility, q0, Ned,
     es_d = FYK / (1.15 * 200000)
     m_fi_max = (alfa * Wwd + 0.035) / (30 * (vd + Wv) * es_d * bw_cm / b0)
 
-    if is_bigger_T1:
+    if T1 >= Tc:
         Med_to_Mrd = (m_fi_max + 1) / (2 * q0)
     else:
-        Med_to_Mrd = (m_fi_max + 1) / (2 * q0)
-    Label(tk, text=f'Required Med/Mrd: {Med_to_Mrd:.2f}', bg='#93c47d', fg='black').grid(column=1, row=17, padx=5,
+        Med_to_Mrd = ((m_fi_max + 1) * T1 / Tc + 2) / (2 * q0)
+    Label(tk, text=f'Required Med/Mrd: {Med_to_Mrd:.2f}', bg='#93c47d', fg='black').grid(column=1, row=18, padx=5,
                                                                                          pady=5)
+
+    create_note(shear_wall, lc_cm, bw_cm, Ned, lc_req, Med_to_Mrd)
 
 
 def calculate_sum_of_squares_bi(lc_cm, bw_cm, height, width, concrete_cover, Asw1_diameter, As1_diameter):
@@ -255,6 +268,28 @@ def calculate_sum_of_squares_bi(lc_cm, bw_cm, height, width, concrete_cover, Asw
         sum_square_bi_short_side = 2 * bi_short_side ** 2
 
     return sum_square_bi_short_side + sum_square_bi_long_side
+
+
+def calculate_length_of_stirrups(Lc_cm, width, concrete_cover):
+    main_stirrup_length = 2 * (Lc_cm - 2 * concrete_cover) + 2 * (width - 2 * concrete_cover)
+    total_length = main_stirrup_length
+    if Lc_cm == 45:
+        total_length += 2 * 20 + 2 * (width - 2 * concrete_cover)
+    elif Lc_cm == 60:
+        total_length += 2 * 32 + 3 * (width - 2 * concrete_cover)
+    elif Lc_cm == 75:
+        total_length += 4 * 32 + 4 * (width - 2 * concrete_cover)
+    elif Lc_cm == 90:
+        total_length += 4 * 47 + 5 * (width - 2 * concrete_cover)
+    elif Lc_cm == 105:
+        total_length += 4 * 47 + 6 * (width - 2 * concrete_cover)
+    elif Lc_cm == 120:
+        total_length += 4 * 61 + 7 * (width - 2 * concrete_cover)
+    elif Lc_cm == 135:
+        total_length += 8 * 34 + 8 * (width - 2 * concrete_cover)
+    elif Lc_cm == 150:
+        total_length += 8 * 34 + 9 * (width - 2 * concrete_cover)
+    return total_length
 
 
 if __name__ == "__main__":
