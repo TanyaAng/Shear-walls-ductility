@@ -167,7 +167,7 @@ def generate_note():
     sheet_name = Entry(tk)
     sheet_name.grid(column=1, row=1, padx=5, pady=5)
 
-    Button(tk, text="Save to excel", bg='green', fg='white', font=MAIN_FONT,
+    Button(tk, text="Save to excel", bg='#107C10', fg='white', font=MAIN_FONT,
            command=lambda: save_to_excel(sheet_name.get(), file_path.get())).grid(column=0, row=2, padx=5, pady=5)
     Button(tk, text="Back", bg='gray', fg='white', font=MAIN_FONT, command=lambda: render_main_view()).grid(column=1,
                                                                                                              row=2,
