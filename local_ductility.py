@@ -2,6 +2,7 @@ from tkinter import *
 from math import ceil
 from PIL import ImageTk, Image
 import json
+import openpyxl
 
 MAIN_COLOUR = '#fce5cd'
 MAIN_FONT = 'ArialNarrow 10 bold'
@@ -153,14 +154,53 @@ def render_main_view():
                                                                                                                row=15,
                                                                                                                padx=5,
                                                                                                                pady=5)
-    Button(tk, text='Create Note', bg='green', fg='white', font=MAIN_FONT).grid(column=0, row=20, padx=5,pady=5)
+    Button(tk, text="Generate note", bg='green', fg='white', font=MAIN_FONT, command=lambda: generate_note()).grid(
+        column=0, row=20, padx=5, pady=5)
 
 
-def create_note(shear_wall, lc_cm, bw_cm, Ned, lc_req, Med_to_Mrd):
-    with open('database.txt', 'a') as file:
-        shear_walls = {"Shear wall No:": shear_wall, "Lc": lc_cm, "bw": bw_cm, 'Ned': Ned, "Required Lc": lc_req,
-                           "Med/Mrd": Med_to_Mrd}
+def generate_note():
+    clear_view()
+    Label(tk, text='File path', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=0, padx=5, pady=5)
+    file_path = Entry(tk)
+    file_path.grid(column=1, row=0, padx=5, pady=5)
+    Label(tk, text='Sheet_name', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=1, padx=5, pady=5)
+    sheet_name = Entry(tk)
+    sheet_name.grid(column=1, row=1, padx=5, pady=5)
+
+    Button(tk, text="Save to excel", bg='green', fg='white', font=MAIN_FONT,
+           command=lambda: save_to_excel(sheet_name.get(), file_path.get())).grid(column=0, row=2, padx=5, pady=5)
+    Button(tk, text="Back", bg='green', fg='white', font=MAIN_FONT, command=lambda: render_main_view()).grid(column=0,
+                                                                                                             row=3,
+                                                                                                             padx=5,
+                                                                                                             pady=5)
+
+
+def create_note(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, fck, concrete_cover, global_ductility, q0, T1, Tc, Ned,
+                Asw1, As1, Asv1, check_bw, lsw, Vsw, Vc, bi, alfa, ecu, vd, wv, xu, lc_req, Med_to_Mrd):
+    with open('database.txt', 'w') as file:
+        shear_walls = {"Shear wall No:": shear_wall, "Hs": Hs_cm, "Lc": lc_cm, "bw": bw_cm, "Lw": lw_cm,
+                       "Concrete class": fck, "Concrete cover": concrete_cover, "Ductility": global_ductility, "q0": q0,
+                       "T1": T1, "Tc": Tc, 'Ned': Ned, "As1": As1, "Asw,1": Asw1, "Asv": Asv1, "Check bw": check_bw,
+                       "SumLsw": lsw, "Vsw": Vsw, "Vc": Vc, "sumBi": bi, "Alfa": alfa, "ecu": ecu, "vd": vd, "wv": wv,
+                       "xu": xu, "Required Lc": lc_req,
+                       "Med/Mrd": Med_to_Mrd}
         json.dump(shear_walls, file)
+
+
+def save_to_excel(sheet_name, file_path):
+    workbook = openpyxl.load_workbook(file_path)
+    sheet = workbook[sheet_name]
+    with open('database.txt', 'r') as file:
+        user_input = json.load(file)
+        print (user_input)
+        # print (user_input['Shear wall No:'])
+        sheet['B2'] = user_input['Shear wall No:']
+        # sheet.cell['B3'] = user_input["Hs"]
+        # sheet.cell(row=1, column=3).value = bw_cm
+        # sheet.cell(row=1, column=4).value = Ned
+        # sheet.cell(row=1, column=5).value = lc_req
+        # sheet.cell(row=1, column=6).value = Med_to_Mrd
+        workbook.save(file_path)
 
 
 def calculate_required_lc(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, global_ductility, q0, Ned, fck, concrete_cover,
@@ -184,14 +224,18 @@ def calculate_required_lc(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, global_ductili
 
     if lc_cm <= max(0.2 * lw_cm, 2 * bw_cm):
         if bw_cm >= max(Hs_cm / 15, 20):
-            Label(tk, text="Bw > Bw.min -> OK", bg='#93c47d', fg='black').grid(column=2, row=3, padx=5, pady=5)
+            check_bw = Label(tk, text="Bw > Bw.min -> OK", bg='#93c47d', fg='black').grid(column=2, row=3, padx=5,
+                                                                                          pady=5)
         else:
-            Label(tk, text=f"Bw > Bw.min -> NO", bg='#CC3333', fg='white').grid(column=2, row=3, padx=5, pady=5)
+            check_bw = Label(tk, text=f"Bw > Bw.min -> NO", bg='#CC3333', fg='white').grid(column=2, row=3, padx=5,
+                                                                                           pady=5)
     else:
         if bw_cm >= max(Hs_cm / 10, 20):
-            Label(tk, text="Bw > Bw.min -> OK", bg='#93c47d', fg='black').grid(column=2, row=3, padx=5, pady=5)
+            check_bw = Label(tk, text="Bw > Bw.min -> OK", bg='#93c47d', fg='black').grid(column=2, row=3, padx=5,
+                                                                                          pady=5)
         else:
-            Label(tk, text=f"Bw > Bw.min -> NO", bg='#CC3333', fg='white').grid(column=2, row=3, padx=5, pady=5)
+            check_bw = Label(tk, text=f"Bw > Bw.min -> NO", bg='#CC3333', fg='white').grid(column=2, row=3, padx=5,
+                                                                                           pady=5)
     length_stirrup = calculate_length_of_stirrups(lc_cm, bw_cm, concrete_cover)
     Vsw = Asw1 * length_stirrup
     Vc = b0 * h0 * Sw
@@ -237,7 +281,10 @@ def calculate_required_lc(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, global_ductili
     Label(tk, text=f'Required Med/Mrd: {Med_to_Mrd:.2f}', bg='#93c47d', fg='black').grid(column=1, row=18, padx=5,
                                                                                          pady=5)
 
-    create_note(shear_wall, lc_cm, bw_cm, Ned, lc_req, Med_to_Mrd)
+    # save_to_excel(shear_wall, lc_cm, bw_cm, Ned, lc_req, Med_to_Mrd,sheet, file_path)
+    create_note(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, fck, concrete_cover, global_ductility, q0, T1, Tc, Ned,
+                Asw1_diameter, As1_diameter, Asv1, check_bw, length_stirrup, Vsw, Vc, sum_square_bi, alfa, e_cu2c, vd,
+                Wv, xu, lc_req, Med_to_Mrd)
 
 
 def calculate_sum_of_squares_bi(lc_cm, bw_cm, height, width, concrete_cover, Asw1_diameter, As1_diameter):
@@ -294,7 +341,7 @@ def calculate_length_of_stirrups(Lc_cm, width, concrete_cover):
 
 if __name__ == "__main__":
     tk = Tk()
-    tk.geometry('750x700')
+    tk.geometry('750x750')
     tk.title('LOCAL DUCTILITY OF SHEAR WALLS')
     tk.configure(bg='#fce5cd')
     render_main_view()
