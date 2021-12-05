@@ -177,7 +177,7 @@ def generate_note():
 
 def create_note(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, fck, concrete_cover, global_ductility, q0, T1, Tc, Ned,
                 Asw1, As1, Asv1, check_bw, lsw, Vsw, Vc, bi, alfa, Wwd, ecu, vd, wv, xu, lc_req, Med_to_Mrd):
-    with open('database.txt', 'w') as file:
+    with open('D:\SOFTUNI\Local Ductility Of Shear Walls\database_local.txt', 'w') as file:
         shear_walls = {"Shear wall No:": shear_wall, "Hs": Hs_cm, "Lc": lc_cm, "bw": bw_cm, "Lw": lw_cm,
                        "Concrete class": fck, "Concrete cover": concrete_cover, "Ductility": global_ductility, "q0": q0,
                        "T1": T1, "Tc": Tc, 'Ned': Ned, "As1": As1, "Asw,1": Asw1, "Asv": Asv1, "Check bw": check_bw,
@@ -190,7 +190,7 @@ def create_note(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, fck, concrete_cover, glo
 def save_to_excel(sheet_name, file_path):
     workbook = openpyxl.load_workbook(file_path)
     sheet = workbook[sheet_name]
-    with open('database.txt', 'r') as file:
+    with open('D:\SOFTUNI\Local Ductility Of Shear Walls\database_local.txt', 'r') as file:
         user_input = json.load(file)
         sheet['B2'] = user_input['Shear wall No:']
         sheet['B3'] = user_input['Hs']
