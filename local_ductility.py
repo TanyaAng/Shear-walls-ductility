@@ -143,7 +143,7 @@ def render_main_view():
     radio_button11.grid(column=3, row=14, padx=5, pady=5)
     radio_button12 = Radiobutton(tk, text='/20', value=20, variable=Sv, bg=MAIN_COLOUR)
     radio_button12.grid(column=4, row=14, padx=5, pady=5)
-    Button(tk, text='Calculate Lc [cm]', bg='green', fg='white', font=MAIN_FONT,
+    Button(tk, text='Calculate', bg='#107C10', fg='white', font=MAIN_FONT,
            command=lambda: calculate_required_lc(shear_wall.get(), float(Hs.get()), int(Lc_cm.get()),
                                                  float(bw_cm.get()),
                                                  float(lw_cm.get()), global_ductility.get(),
@@ -154,7 +154,7 @@ def render_main_view():
                                                                                                                row=15,
                                                                                                                padx=5,
                                                                                                                pady=5)
-    Button(tk, text="Generate note", bg='green', fg='white', font=MAIN_FONT, command=lambda: generate_note()).grid(
+    Button(tk, text="Generate note", bg='#2878BD', fg='white', font=MAIN_FONT, command=lambda: generate_note()).grid(
         column=0, row=20, padx=5, pady=5)
 
 
@@ -163,25 +163,25 @@ def generate_note():
     Label(tk, text='File path', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=0, padx=5, pady=5)
     file_path = Entry(tk)
     file_path.grid(column=1, row=0, padx=5, pady=5)
-    Label(tk, text='Sheet_name', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=1, padx=5, pady=5)
+    Label(tk, text='Sheet name', bg=MAIN_COLOUR, font=MAIN_FONT).grid(column=0, row=1, padx=5, pady=5)
     sheet_name = Entry(tk)
     sheet_name.grid(column=1, row=1, padx=5, pady=5)
 
     Button(tk, text="Save to excel", bg='green', fg='white', font=MAIN_FONT,
            command=lambda: save_to_excel(sheet_name.get(), file_path.get())).grid(column=0, row=2, padx=5, pady=5)
-    Button(tk, text="Back", bg='green', fg='white', font=MAIN_FONT, command=lambda: render_main_view()).grid(column=0,
-                                                                                                             row=3,
+    Button(tk, text="Back", bg='gray', fg='white', font=MAIN_FONT, command=lambda: render_main_view()).grid(column=1,
+                                                                                                             row=2,
                                                                                                              padx=5,
                                                                                                              pady=5)
 
 
 def create_note(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, fck, concrete_cover, global_ductility, q0, T1, Tc, Ned,
-                Asw1, As1, Asv1, check_bw, lsw, Vsw, Vc, bi, alfa, ecu, vd, wv, xu, lc_req, Med_to_Mrd):
+                Asw1, As1, Asv1, check_bw, lsw, Vsw, Vc, bi, alfa, Wwd, ecu, vd, wv, xu, lc_req, Med_to_Mrd):
     with open('database.txt', 'w') as file:
         shear_walls = {"Shear wall No:": shear_wall, "Hs": Hs_cm, "Lc": lc_cm, "bw": bw_cm, "Lw": lw_cm,
                        "Concrete class": fck, "Concrete cover": concrete_cover, "Ductility": global_ductility, "q0": q0,
                        "T1": T1, "Tc": Tc, 'Ned': Ned, "As1": As1, "Asw,1": Asw1, "Asv": Asv1, "Check bw": check_bw,
-                       "SumLsw": lsw, "Vsw": Vsw, "Vc": Vc, "sumBi": bi, "Alfa": alfa, "ecu": ecu, "vd": vd, "wv": wv,
+                       "SumLsw": lsw, "Vsw": Vsw, "Vc": Vc, "sumBi": bi, "Alfa": alfa, "Wwd":Wwd, "ecu": ecu, "vd": vd, "wv": wv,
                        "xu": xu, "Required Lc": lc_req,
                        "Med/Mrd": Med_to_Mrd}
         json.dump(shear_walls, file)
@@ -192,14 +192,37 @@ def save_to_excel(sheet_name, file_path):
     sheet = workbook[sheet_name]
     with open('database.txt', 'r') as file:
         user_input = json.load(file)
-        print (user_input)
-        # print (user_input['Shear wall No:'])
         sheet['B2'] = user_input['Shear wall No:']
-        # sheet.cell['B3'] = user_input["Hs"]
-        # sheet.cell(row=1, column=3).value = bw_cm
-        # sheet.cell(row=1, column=4).value = Ned
-        # sheet.cell(row=1, column=5).value = lc_req
-        # sheet.cell(row=1, column=6).value = Med_to_Mrd
+        sheet['B3'] = user_input['Hs']
+        sheet['B4'] = user_input['Lc']
+        sheet['B5'] = user_input['bw']
+        sheet['B6'] = user_input['Lw']
+        sheet['B7'] = user_input['Concrete class']
+        sheet['B8'] = user_input['Concrete cover']
+        sheet['F3'] = user_input['Ductility']
+        sheet['F4'] = user_input['q0']
+        sheet['F5'] = user_input['T1']
+        sheet['F6'] = user_input['Tc']
+        sheet['B10'] = user_input['Ned']
+        sheet['B11'] = user_input['As1']
+        sheet['B12'] = user_input['Asw,1']
+        sheet['B13'] = user_input['Asv']
+        sheet['C26'] = user_input['SumLsw']
+        sheet['C27'] = user_input['Vsw']
+        sheet['C28'] = user_input['Vc']
+        sheet['B34'] = user_input['sumBi']
+        sheet['B35'] = user_input['Alfa']
+        sheet['B36'] = user_input['Wwd']
+        sheet['B39'] = user_input['ecu']
+        sheet['B48'] = user_input['vd']
+        sheet['B49'] = user_input['wv']
+        sheet['B50'] = user_input['xu']
+        sheet['B56'] = user_input['Required Lc']
+        sheet['B68'] = user_input['Med/Mrd']
+
+
+
+
         workbook.save(file_path)
 
 
@@ -283,7 +306,7 @@ def calculate_required_lc(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, global_ductili
 
     # save_to_excel(shear_wall, lc_cm, bw_cm, Ned, lc_req, Med_to_Mrd,sheet, file_path)
     create_note(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, fck, concrete_cover, global_ductility, q0, T1, Tc, Ned,
-                Asw1_diameter, As1_diameter, Asv1, check_bw, length_stirrup, Vsw, Vc, sum_square_bi, alfa, e_cu2c, vd,
+                Asw1_diameter, As1_diameter, Asv1, check_bw, length_stirrup, Vsw, Vc, sum_square_bi, alfa,Wwd,e_cu2c, vd,
                 Wv, xu, lc_req, Med_to_Mrd)
 
 
