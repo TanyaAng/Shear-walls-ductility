@@ -22,28 +22,28 @@ def render_main_view():
     global head_40_120_img
     global head_40_135_img
     global head_40_150_img
-    head_40_45_img = Image.open('D:\SOFTUNI\Local Ductility Of Shear Walls\head40x45.png')
+    head_40_45_img = Image.open('head40x45.png')
     head_40_45_img = head_40_45_img.resize((90, 60))
     head_40_45_img = ImageTk.PhotoImage(head_40_45_img)
-    head_40_60_img = Image.open('D:\SOFTUNI\Local Ductility Of Shear Walls\head40x60.png')
+    head_40_60_img = Image.open('head40x60.png')
     head_40_60_img = head_40_60_img.resize((90, 60))
     head_40_60_img = ImageTk.PhotoImage(head_40_60_img)
-    head_40_75_img = Image.open('D:\SOFTUNI\Local Ductility Of Shear Walls\head40x75.png')
+    head_40_75_img = Image.open('head40x75.png')
     head_40_75_img = head_40_75_img.resize((90, 60))
     head_40_75_img = ImageTk.PhotoImage(head_40_75_img)
-    head_40_90_img = Image.open('D:\SOFTUNI\Local Ductility Of Shear Walls\head40x90.png')
+    head_40_90_img = Image.open('head40x90.png')
     head_40_90_img = head_40_90_img.resize((90, 60))
     head_40_90_img = ImageTk.PhotoImage(head_40_90_img)
-    head_40_105_img = Image.open('D:\SOFTUNI\Local Ductility Of Shear Walls\head40x105.png')
+    head_40_105_img = Image.open('head40x105.png')
     head_40_105_img = head_40_105_img.resize((90, 60))
     head_40_105_img = ImageTk.PhotoImage(head_40_105_img)
-    head_40_120_img = Image.open('D:\SOFTUNI\Local Ductility Of Shear Walls\head40x120.png')
+    head_40_120_img = Image.open('head40x120.png')
     head_40_120_img = head_40_120_img.resize((90, 60))
     head_40_120_img = ImageTk.PhotoImage(head_40_120_img)
-    head_40_135_img = Image.open('D:\SOFTUNI\Local Ductility Of Shear Walls\head40x135.png')
+    head_40_135_img = Image.open('head40x135.png')
     head_40_135_img = head_40_135_img.resize((90, 60))
     head_40_135_img = ImageTk.PhotoImage(head_40_135_img)
-    head_40_150_img = Image.open('D:\SOFTUNI\Local Ductility Of Shear Walls\head40x150.png')
+    head_40_150_img = Image.open('head40x150.png')
     head_40_150_img = head_40_150_img.resize((90, 60))
     head_40_150_img = ImageTk.PhotoImage(head_40_150_img)
 
@@ -177,7 +177,7 @@ def generate_note():
 
 def create_note(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, fck, concrete_cover, global_ductility, q0, T1, Tc, Ned,
                 Asw1, As1, Asv1, check_bw, lsw, Vsw, Vc, bi, alfa, Wwd, ecu, vd, wv, xu, lc_req, Med_to_Mrd):
-    with open('D:\SOFTUNI\Local Ductility Of Shear Walls\database_local.txt', 'w') as file:
+    with open('database.txt', 'w') as file:
         shear_walls = {"Shear wall No:": shear_wall, "Hs": Hs_cm, "Lc": lc_cm, "bw": bw_cm, "Lw": lw_cm,
                        "Concrete class": fck, "Concrete cover": concrete_cover, "Ductility": global_ductility, "q0": q0,
                        "T1": T1, "Tc": Tc, 'Ned': Ned, "As1": As1, "Asw,1": Asw1, "Asv": Asv1, "Check bw": check_bw,
@@ -190,7 +190,7 @@ def create_note(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, fck, concrete_cover, glo
 def save_to_excel(sheet_name, file_path):
     workbook = openpyxl.load_workbook(file_path)
     sheet = workbook[sheet_name]
-    with open('D:\SOFTUNI\Local Ductility Of Shear Walls\database_local.txt', 'r') as file:
+    with open('database.txt', 'r') as file:
         user_input = json.load(file)
         sheet['B2'] = user_input['Shear wall No:']
         sheet['B3'] = user_input['Hs']
@@ -219,10 +219,6 @@ def save_to_excel(sheet_name, file_path):
         sheet['B50'] = user_input['xu']
         sheet['B56'] = user_input['Required Lc']
         sheet['B68'] = user_input['Med/Mrd']
-
-
-
-
         workbook.save(file_path)
 
 
