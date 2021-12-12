@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from math import ceil
 from PIL import ImageTk, Image
 import json
@@ -6,6 +7,12 @@ import openpyxl
 
 MAIN_COLOUR = '#fce5cd'
 MAIN_FONT = 'ArialNarrow 10 bold'
+REBARS = {8: 0.503, 10: 0.785, 12: 1.131, 14: 1.539, 16: 2.011, 18: 2.545, 20: 3.142, 22: 3.801, 25: 4.909,
+          28: 6.158, 32: 8.042}
+FYK = 500
+CONCRETE_CLASS = {20: 'C20/25', 25: 'C25/30', 30: 'C30/37', 35: 'C35/45', 40: 'C40/50', 45: 'C45/55', 50: 'C50/60'}
+IMAGE_DICT = {45: 'head40x45.png', 60: 'head40x60.png', 75: 'head40x75.png', 90: 'head40x90.png', 105: 'head40x105.png',
+              120: 'head40x120.png', 135: 'head40x135.png', 150: 'head40x150.png'}
 
 
 def clear_view():
@@ -170,18 +177,20 @@ def generate_note():
     Button(tk, text="Save to excel", bg='#107C10', fg='white', font=MAIN_FONT,
            command=lambda: save_to_excel(sheet_name.get(), file_path.get())).grid(column=0, row=2, padx=5, pady=5)
     Button(tk, text="Back", bg='gray', fg='white', font=MAIN_FONT, command=lambda: render_main_view()).grid(column=1,
-                                                                                                             row=2,
-                                                                                                             padx=5,
-                                                                                                             pady=5)
+                                                                                                            row=2,
+                                                                                                            padx=5,
+                                                                                                            pady=5)
 
 
 def create_note(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, fck, concrete_cover, global_ductility, q0, T1, Tc, Ned,
-                Asw1, As1, Asv1, check_bw, lsw, Vsw, Vc, bi, alfa, Wwd, ecu, vd, wv, xu, lc_req, Med_to_Mrd):
+                Asw1, As1, Asv1, Sv, check_bw, lsw, Vsw, Vc, bi, alfa, Wwd, ecu, vd, wv, xu, lc_req, Med_to_Mrd):
     with open('database.txt', 'w') as file:
         shear_walls = {"Shear wall No:": shear_wall, "Hs": Hs_cm, "Lc": lc_cm, "bw": bw_cm, "Lw": lw_cm,
                        "Concrete class": fck, "Concrete cover": concrete_cover, "Ductility": global_ductility, "q0": q0,
-                       "T1": T1, "Tc": Tc, 'Ned': Ned, "As1": As1, "Asw,1": Asw1, "Asv": Asv1, "Check bw": check_bw,
-                       "SumLsw": lsw, "Vsw": Vsw, "Vc": Vc, "sumBi": bi, "Alfa": alfa, "Wwd":Wwd, "ecu": ecu, "vd": vd, "wv": wv,
+                       "T1": T1, "Tc": Tc, 'Ned': Ned, "As1": As1, "Asw,1": Asw1, "Asv": Asv1, "Sv": Sv,
+                       "Check bw": check_bw,
+                       "SumLsw": lsw, "Vsw": Vsw, "Vc": Vc, "sumBi": bi, "Alfa": alfa, "Wwd": Wwd, "ecu": ecu, "vd": vd,
+                       "wv": wv,
                        "xu": xu, "Required Lc": lc_req,
                        "Med/Mrd": Med_to_Mrd}
         json.dump(shear_walls, file)
@@ -191,42 +200,46 @@ def save_to_excel(sheet_name, file_path):
     workbook = openpyxl.load_workbook(file_path)
     sheet = workbook[sheet_name]
     with open('database.txt', 'r') as file:
-        user_input = json.load(file)
-        sheet['B2'] = user_input['Shear wall No:']
-        sheet['B3'] = user_input['Hs']
-        sheet['B4'] = user_input['Lc']
-        sheet['B5'] = user_input['bw']
-        sheet['B6'] = user_input['Lw']
-        sheet['B7'] = user_input['Concrete class']
-        sheet['B8'] = user_input['Concrete cover']
-        sheet['F3'] = user_input['Ductility']
-        sheet['F4'] = user_input['q0']
-        sheet['F5'] = user_input['T1']
-        sheet['F6'] = user_input['Tc']
-        sheet['B10'] = user_input['Ned']
-        sheet['B11'] = user_input['As1']
-        sheet['B12'] = user_input['Asw,1']
-        sheet['B13'] = user_input['Asv']
-        sheet['C26'] = user_input['SumLsw']
-        sheet['C27'] = user_input['Vsw']
-        sheet['C28'] = user_input['Vc']
-        sheet['B34'] = user_input['sumBi']
-        sheet['B35'] = user_input['Alfa']
-        sheet['B36'] = user_input['Wwd']
-        sheet['B39'] = user_input['ecu']
-        sheet['B48'] = user_input['vd']
-        sheet['B49'] = user_input['wv']
-        sheet['B50'] = user_input['xu']
-        sheet['B56'] = user_input['Required Lc']
-        sheet['B68'] = user_input['Med/Mrd']
-        workbook.save(file_path)
+        try:
+            user_input = json.load(file)
+            sheet['B2'] = user_input['Shear wall No:']
+            sheet['B3'] = user_input['Hs']
+            sheet['B4'] = user_input['Lc']
+            sheet['B5'] = user_input['bw']
+            sheet['B6'] = user_input['Lw']
+            sheet['B7'] = CONCRETE_CLASS[user_input['Concrete class']]
+            sheet['B8'] = user_input['Concrete cover']
+            sheet['F3'] = user_input['Ductility']
+            sheet['F4'] = user_input['q0']
+            sheet['F5'] = user_input['T1']
+            sheet['F6'] = user_input['Tc']
+            sheet['B10'] = user_input['Ned']
+            sheet['B11'] = f"N{user_input['As1']}"
+            sheet['B12'] = f"N{user_input['Asw,1']}"
+            sheet['B13'] = f"N{user_input['Asv']}/{user_input['Sv']}"
+            sheet['C26'] = user_input['SumLsw']
+            sheet['C27'] = user_input['Vsw']
+            sheet['C28'] = user_input['Vc']
+            sheet['B34'] = user_input['sumBi']
+            sheet['B35'] = user_input['Alfa']
+            sheet['B36'] = user_input['Wwd']
+            sheet['B39'] = user_input['ecu']
+            sheet['B48'] = user_input['vd']
+            sheet['B49'] = user_input['wv']
+            sheet['B50'] = user_input['xu']
+            sheet['B56'] = user_input['Required Lc']
+            sheet['B68'] = user_input['Med/Mrd']
+            img = openpyxl.drawing.image.Image(IMAGE_DICT[user_input['Lc']])
+            img.anchor = 'E27'
+            sheet.add_image(img)
+            workbook.save(file_path)
+            messagebox.showinfo("Info", "Successful")
+        except:
+            messagebox.showwarning("Warning", "Invalid Input")
 
 
 def calculate_required_lc(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, global_ductility, q0, Ned, fck, concrete_cover,
                           Asw1_diameter, As1_diameter, Asv1_diameter, Sv, T1, Tc):
-    REBARS = {8: 0.503, 10: 0.785, 12: 1.131, 14: 1.539, 16: 2.011, 18: 2.545, 20: 3.142, 22: 3.801, 25: 4.909,
-              28: 6.158, 32: 8.042}
-    FYK = 500
     Asw1 = REBARS[Asw1_diameter]
     Asv1 = REBARS[Asv1_diameter]
 
@@ -302,7 +315,8 @@ def calculate_required_lc(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, global_ductili
 
     # save_to_excel(shear_wall, lc_cm, bw_cm, Ned, lc_req, Med_to_Mrd,sheet, file_path)
     create_note(shear_wall, Hs_cm, lc_cm, bw_cm, lw_cm, fck, concrete_cover, global_ductility, q0, T1, Tc, Ned,
-                Asw1_diameter, As1_diameter, Asv1, check_bw, length_stirrup, Vsw, Vc, sum_square_bi, alfa,Wwd,e_cu2c, vd,
+                Asw1_diameter, As1_diameter, Asv1_diameter, Sv, check_bw, length_stirrup, Vsw, Vc, sum_square_bi, alfa,
+                Wwd, e_cu2c, vd,
                 Wv, xu, lc_req, Med_to_Mrd)
 
 
@@ -365,3 +379,4 @@ if __name__ == "__main__":
     tk.configure(bg='#fce5cd')
     render_main_view()
     tk.mainloop()
+    open("database.txt", "w").close()
